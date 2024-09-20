@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ImageList from './components/ImageList/ImageList';
 import Image from './components/Image/Image';
 import imagesData from './data/images.json';
@@ -35,19 +35,21 @@ function App() {
     }));
   }, [images]);
 
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <ImageList images={memoizedImages} addNewPhoto={addNewPhoto} />,
+    },
+    {
+      path: "/image/:id",
+      element: <Image images={memoizedImages} />,
+    },
+  ], {
+    basename: import.meta.env.BASE_URL
+  });
+
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={
-            <ImageList images={memoizedImages} addNewPhoto={addNewPhoto} />
-          } />
-          <Route path="/image/:id" element={
-            <Image images={memoizedImages} />
-          } />
-        </Routes>
-      </div>
-    </Router>
+    <RouterProvider router={router} />
   );
 }
 
